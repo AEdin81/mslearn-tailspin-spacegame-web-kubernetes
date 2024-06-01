@@ -71,22 +71,20 @@ stages:
               namespace: 'default'
 
           - task: KubernetesManifest@1
-            displayName: Create imagePullSecret
+            displayName: Deploy to Kubernetes cluster
             inputs:
-                action: createSecret
-                connectionType: azureResourceManager
-                secretName: $(imagePullSecret)
-                dockerRegistryEndpoint: 'Container Registry Connection'
-                azureSubscriptionConnection: 'Kubernetes Cluster Connection'
-                azureResourceGroup: 'tailspin-space-game-rg'
-                kubernetesCluster: 'tailspinspacegame-05031981'
-                namespace: 'default'
-                manifests: |
-                    $(Pipeline.Workspace)/manifests/deployment.yml
-                    $(Pipeline.Workspace)/manifests/service.yml
-                imagePullSecrets: |
-                    $(imagePullSecret)
-                containers: |
-                    $(RegistryName)/$(webRepository):$(tag)
-                    $(RegistryName)/$(leaderboardRepository):$(tag)        
+              action: deploy
+              connectionType: azureResourceManager
+              azureSubscriptionConnection: 'Kubernetes Cluster Connection'
+              azureResourceGroup: 'tailspin-space-game-rg'
+              kubernetesCluster: 'tailspinspacegame-24591'
+              namespace: 'default'
+              manifests: |
+                $(Pipeline.Workspace)/manifests/deployment.yml
+                $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(RegistryName)/$(webRepository):$(tag)
+                $(RegistryName)/$(leaderboardRepository):$(tag)        
 
